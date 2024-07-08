@@ -20,7 +20,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     private final SessionFactory sessionFactory;
     public PlayerRepositoryDB() {
         Properties properties = new Properties();
-        //properties.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
+        //properties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
         //properties.put(Environment.URL, "jdbc:mysql://localhost:3307/rpg") ;
         properties.put(Environment.USER, "bissiko");
         properties.put(Environment.PASS, "Mys__3299");
@@ -28,8 +28,15 @@ public class PlayerRepositoryDB implements IPlayerRepository {
         properties.put(Environment.DRIVER, "com.p6spy.engine.spy.P6SpyDriver");
         properties.put(Environment.URL, "jdbc:p6spy:mysql://localhost:3307/rpg");
 
+        properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
+        properties.put(Environment.SHOW_SQL, "true");
+        properties.put(Environment.FORMAT_SQL, "true");
+        properties.put(Environment.USE_SQL_COMMENTS, "true");
+
+
         sessionFactory = new Configuration()
                 .setProperties(properties)
+                .addAnnotatedClass(Player.class)
                 .buildSessionFactory();
     }
 
@@ -38,7 +45,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
         try (Session session = sessionFactory.openSession()) {
             String hql = "SELECT * FROM rpg.player";
             NativeQuery<Player> query = session.createNativeQuery(hql, Player.class);
-            query.setFirstResult(pageSize*pageNumber + 1);
+            query.setFirstResult(pageSize*pageNumber);
             query.setMaxResults(pageSize);
             return query.list();
         }
@@ -47,8 +54,8 @@ public class PlayerRepositoryDB implements IPlayerRepository {
     public int getAllCount() {
         try (Session session = sessionFactory.openSession()) {
             //String hql = "select count(*) from Player";
-            Query<Integer> query = session.createNamedQuery("Player_Count", Integer.class);
-            return query.uniqueResult();
+            Query<Long> query = session.createNamedQuery("Player_Count", Long.class);
+            return query.uniqueResult().intValue();
         }
     }
 

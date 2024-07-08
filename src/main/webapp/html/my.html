@@ -30,7 +30,10 @@
         <th>Delete</th>
     </tr>
 </table>
-
+<h1>Players</h1>
+<ul>
+    <li th:each="player : ${players}" th:text="${player.name}"></li>
+</ul>
 <div id="paging_buttons">Pages: </div>
 
 <hr>

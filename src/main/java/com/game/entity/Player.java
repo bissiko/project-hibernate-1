@@ -1,7 +1,7 @@
 package com.game.entity;
 
-import org.hibernate.annotations.Entity;
-import org.hibernate.annotations.Table;
+//import org.hibernate.annotations.Entity;
+//import org.hibernate.annotations.Table;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Date;
                 query = "select count(*) from Player")
 })
 @Entity
-//@Table(name = "player", schema="rpg")
+@Table(name = "player", schema="rpg")
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
